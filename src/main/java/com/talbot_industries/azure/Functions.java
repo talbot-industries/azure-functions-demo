@@ -15,7 +15,7 @@ public class Functions {
      * 2. curl "{your host}/api/HttpExample?name=HTTP%20Query"
      */
     @FunctionName("HttpExample")
-    public HttpResponseMessage run(
+    public HttpResponseMessage httpExample(
             @HttpTrigger(
                     name = "req",
                     methods = {HttpMethod.GET, HttpMethod.POST},
@@ -33,5 +33,21 @@ public class Functions {
         } else {
             return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
         }
+    }
+
+    @FunctionName("usageCount")
+    public static HttpResponseMessage xx(
+            @HttpTrigger(
+                    name = "req",
+                    methods = {HttpMethod.GET},
+                    authLevel = AuthorizationLevel.ANONYMOUS)
+            HttpRequestMessage<Optional<String>> request,
+            final ExecutionContext context) {
+        context.getLogger().info("Java HTTP trigger processed a request.");
+
+        return request.createResponseBuilder(HttpStatus.OK).
+                header("Content-type", "application/json").
+                body("{ \"foo\": \"bar\" }").
+                build();
     }
 }

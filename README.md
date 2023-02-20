@@ -30,6 +30,7 @@ The [Java function in the repo source](src/main/java/com/talbot_industries/azure
 
 Test locally by browsing to http://localhost:7071/api/HttpExample?name=foobar
 
+Also browsing at http://localhost:7071/api/usageCount
 
 ### Testing in the cloud
 
@@ -38,6 +39,7 @@ Test locally by browsing to http://localhost:7071/api/HttpExample?name=foobar
 
 Test in the cloud by browsing to https://functions-20230220104431490.azurewebsites.net/api/httpexample?name=foobar
 
+Also browsing at https://functions-20230220104431490.azurewebsites.net/api/usageCount 
 
 ### Deploying a Cosmos Mongo DB in Azure
 

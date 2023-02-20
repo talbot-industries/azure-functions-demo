@@ -41,7 +41,7 @@ public class FunctionsTest {
         doReturn(Logger.getGlobal()).when(context).getLogger();
 
         // Invoke
-        final HttpResponseMessage ret = new Functions().run(req, context);
+        final HttpResponseMessage ret = new Functions().httpExample(req, context);
 
         // Verify
         assertEquals(ret.getStatus(), HttpStatus.OK);
