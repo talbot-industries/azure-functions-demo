@@ -30,7 +30,7 @@ The [Java function in the repo source](src/main/java/com/talbot_industries/azure
 
 Test locally by browsing to http://localhost:7071/api/HttpExample?name=foobar
 
-Also browsing at http://localhost:7071/api/usageCount
+Also browsing at http://localhost:7071/api/usageCount and  http://localhost:7071/api/incrementUsage
 
 ### Testing in the cloud
 
@@ -39,7 +39,7 @@ Also browsing at http://localhost:7071/api/usageCount
 
 Test in the cloud by browsing to https://functions-20230220104431490.azurewebsites.net/api/httpexample?name=foobar
 
-Also browsing at https://functions-20230220104431490.azurewebsites.net/api/usageCount 
+Also browsing at https://functions-20230220104431490.azurewebsites.net/api/usageCount and https://functions-20230220104431490.azurewebsites.net/api/incrementUsage
 
 ### Deploying a Cosmos Mongo DB in Azure
 
@@ -47,6 +47,8 @@ Also browsing at https://functions-20230220104431490.azurewebsites.net/api/usage
 
 * Terraform
   * `brew install terraform`
+* Mongo Shell
+  * `brew install mongosh`
 
 #### Deploy Cosmos
 
@@ -55,3 +57,15 @@ Database definition in the source repo at [terraform.tf](terraform.tf)
 * `az login`
 * `terraform init`
 * `terraform apply`
+
+#### Connect to CosmosDB using Mongo Shell
+
+* `mongosh --host tfex-cosmos-db-38517.mongo.cosmos.azure.com --port 10255 --tls -u tfex-cosmos-db-38517 -p <password>`
+
+Inside the Mongo Shell, create a database, and a collection:
+
+* `use exampleDb`
+* `db.createCollection('exampleCollection')`
+* `show dbs`
+* `show collections`
+* `db.exampleCollection.find()`

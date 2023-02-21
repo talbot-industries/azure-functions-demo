@@ -2,7 +2,11 @@ package com.talbot_industries.azure;
 
 import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import org.bson.Document;
 
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -35,8 +39,10 @@ public class Functions {
         }
     }
 
-    @FunctionName("usageCount")
-    public static HttpResponseMessage xx(
+    private static String cosmosUri = "<redacted>";
+
+    @FunctionName("incrementUsage")
+    public static HttpResponseMessage incrementUsage(
             @HttpTrigger(
                     name = "req",
                     methods = {HttpMethod.GET},
@@ -45,9 +51,38 @@ public class Functions {
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
+        var mongoClient = MongoClients.create(cosmosUri);
+        var database = mongoClient.getDatabase("exampleDb");
+        var collection = database.getCollection("exampleCollection");
+
+        var document = new Document("time", Instant.now().toString());
+        var result = collection.insertOne(document);
+
+        var objectId = result.getInsertedId().asObjectId().getValue().toString();
+
         return request.createResponseBuilder(HttpStatus.OK).
                 header("Content-type", "application/json").
-                body("{ \"foo\": \"bar\" }").
+                body("{ \"objectId\": \"" + objectId + "\" }").
+                build();
+    }
+
+    @FunctionName("usageCount")
+    public static HttpResponseMessage usageCount(
+            @HttpTrigger(
+                    name = "req",
+                    methods = {HttpMethod.GET},
+                    authLevel = AuthorizationLevel.ANONYMOUS)
+            HttpRequestMessage<Optional<String>> request,
+            final ExecutionContext context) {
+        context.getLogger().info("Java HTTP trigger processed a request.");
+
+        var mongoClient = MongoClients.create(cosmosUri);
+        var database = mongoClient.getDatabase("exampleDb");
+        var collection = database.getCollection("exampleCollection");
+
+        return request.createResponseBuilder(HttpStatus.OK).
+                header("Content-type", "application/json").
+                body("{ \"count\": " + collection.countDocuments() + " }").
                 build();
     }
 }
